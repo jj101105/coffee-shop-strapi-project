@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "customers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::costumer.costumer",
+      "mappedBy": "order"
+    },
+    "cashier": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cashier.cashier",
+      "inversedBy": "order"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "tax": {
+      "type": "integer"
+    },
+    "payment": {
+      "type": "decimal"
+    },
+    "orderAt": {
+      "type": "datetime"
+    },
+    "order_items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order-item.order-item"
+    }
+  }
+}

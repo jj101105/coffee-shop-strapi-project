@@ -1,0 +1,57 @@
+services:
+
+  strapi:
+    container_name: coffee-shop-strapi
+    build: .
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "1337:1337"
+
+    volumes:
+      - .:/opt/app
+      - /opt/app/node_modules
+
+    depends_on:
+      - strapi-db
+
+  strapi-db:
+    container_name: coffee-shop-db
+    image: mysql:8.0
+    restart: unless-stopped
+
+    command: --default-authentication-plugin=mysql_native_password
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: coffee-shop
+      MYSQL_USER: strapi
+      MYSQL_PASSWORD: strapi_password
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - strapi-db-data:/var/lib/mysql
+
+  phpmyadmin:
+    container_name: coffee-shop
+    image: phpmyadmin:latest
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"
+
+    environment:
+      PMA_HOST: strapi-db
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+    depends_on:
+      - strapi-db
+
+volumes:
+  strapi-db-data:

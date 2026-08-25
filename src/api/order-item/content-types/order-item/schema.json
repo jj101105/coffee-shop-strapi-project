@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_items",
+  "info": {
+    "singularName": "order-item",
+    "pluralName": "order-items",
+    "displayName": "Order Item"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "qty": {
+      "type": "integer"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "discount": {
+      "type": "boolean"
+    },
+    "discountNumber": {
+      "type": "decimal",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "discount"
+            },
+            true
+          ]
+        }
+      }
+    },
+    "iceChoice": {
+      "type": "enumeration",
+      "enum": [
+        "SEPERATED ICE",
+        "NORMAL ICE",
+        "LESS ICE"
+      ]
+    },
+    "sugarLevel": {
+      "type": "integer"
+    },
+    "subTotal": {
+      "type": "decimal"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category"
+    }
+  }
+}

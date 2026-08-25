@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "costumers",
+  "info": {
+    "singularName": "costumer",
+    "pluralName": "costumers",
+    "displayName": "Customer"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "MALE",
+        "FEMALE"
+      ]
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
+      "inversedBy": "customers"
+    }
+  }
+}
