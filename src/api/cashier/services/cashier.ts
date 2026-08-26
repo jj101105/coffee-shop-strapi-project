@@ -3,6 +3,9 @@
  */
 
 import { factories } from '@strapi/strapi';
+import { APICOLLECTION } from '../../../utils/constant';
+import { CashierDTO } from '../../../dtos/cashierDTO';
+import { CashierDVO } from '../../../dvos/cashierDVO';
 
 export default factories.createCoreService('api::cashier.cashier', () => ({
     async createCashierService(data: any){
@@ -31,5 +34,37 @@ export default factories.createCoreService('api::cashier.cashier', () => ({
             }
         });
         return getCashierDetail;
+    },
+    async updateCashierService(documentId: string, dto:CashierDTO ){
+        const updateCashier = await strapi.documents(APICOLLECTION.CASHIER).update({
+            
+                documentId,
+                data: {
+                    name: dto?.name,
+                    phone: dto?.phone,
+                    workingShift: dto?.workingShift,
+                    gender: dto?.gender,
+                    email: dto?.email,
+                    order: dto?.order
+                }
+            
+        })
+        if (!updateCashier) {
+            throw new Error(`Cashier with documentId ${documentId} was not found`);
+        }
+
+        const dvo: CashierDVO = {
+            documentId: updateCashier.documentId,
+            name: updateCashier.name ?? undefined,
+            phone: updateCashier.phone ?? undefined,
+            workingShift: updateCashier.workingShift ?? undefined,
+            gender: updateCashier.gender ?? undefined,
+            email: updateCashier.email ?? undefined,
+        }
+        return dvo;
+    },
+    async deleteService(documentId: any){
+        const deleteCashier= await strapi.documents(APICOLLECTION.CASHIER).delete(documentId);
+        return deleteCashier
     }
 }));

@@ -27,6 +27,22 @@ export default {
         config: {
             auth: false
         },
+    },
+    { 
+        method: 'POST',
+        path: '/cashier/updateCasheir/:documentId',
+        handler: 'cashier.updateCashier',
+        config: {
+            auth: false
+        },
+    },
+    { 
+        method: 'DELETE',
+        path: '/cashier/deleteCashier/:documentId',
+        handler: 'cashier.deleteCashier',
+        config: {
+            auth: false
+        },
     }
 
   ],

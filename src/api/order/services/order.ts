@@ -36,15 +36,25 @@ export default factories.createCoreService('api::order.order', ({strapi}) => ({
       const orderAt = new Date();
       const createOrder = await strapi.documents('api::order.order').create({
         data: {
-            customer: data.customer,
-            orderItems: orderItemId,
+            customers: {
+              connect: [data.costumer],
+            },
+            order_items: {
+              connect: orderItemId,
+            },
             orderAt,
             cashier: data.cashier,
             total,
             tax: taxAmount,
             payment,
 
-        }
+        },
+        populate: {
+          customers: true,
+          order_items: true,
+          cashier: true,
+        },
+        status: "published"
       });
       return createOrder;
     }

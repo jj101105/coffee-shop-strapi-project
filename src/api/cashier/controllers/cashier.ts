@@ -4,6 +4,11 @@
 
 import { factories } from '@strapi/strapi';
 import jwt from 'jsonwebtoken';
+import { CashierDTO } from '../../../dtos/cashierDTO';
+import { APICOLLECTION } from '../../../utils/constant';
+import { CashierDVO } from '../../../dvos/cashierDVO';
+import { createResponse } from '../../../utils/requestResponse';
+import { HTTPCODE } from '../../../utils/devCode';
 
 const INVALID_CREDENTIALS = 'Invalid phone/email or password';
 
@@ -100,5 +105,50 @@ export default factories.createCoreController('api::cashier.cashier', () => ({
             throw error;
         }
     },
+	async updateCashier(ctx: any){
+		try {
+			const documentId= ctx.params.documentId;
+			const  dto: CashierDTO = ctx.request.body;
+			const result= await strapi.service(APICOLLECTION.CASHIER).updateCashierService(documentId, dto);
+			ctx.body= result;
+			const dvo: CashierDVO ={
+				documentId : result.documentId,
+				name: result.name,
+				phone: result.phone,
+				workingShift: result.workingShift,
+				gender: result.gender,
+				email:result.email,
+				order: result.order,
+			}
+			ctx.body={
+				data:dvo
+			}
+			return createResponse({
+				ctx,
+				httpCode: HTTPCODE.CREATED,
+				devCode: HTTPCODE.CREATED,
+				message: "Update casher successfully",
+				data:result
+			})
+			
+		}catch(error){
+			throw Error("Error while festching cashier");
+		}
+	},
+	async deleteCashier(ctx: any){
+		try{
+			const documentId= ctx.params.documentId;
+			const deleteCashier= await strapi.service(APICOLLECTION.CASHIER).deleteService(documentId);
+			return createResponse({
+				ctx,
+				httpCode: HTTPCODE.SUCCESS,
+				devCode: HTTPCODE.SUCCESS,
+				message: "Delete cashier success",
+				data: deleteCashier
+			})
+		}catch(error){
+			throw Error ("Error while fetching cashier")
+		}
+	}
     
 }));

@@ -13,7 +13,7 @@ export default factories.createCoreController('api::order.order', ({strapi}) => 
             }
             const order = await strapi.service('api::order.order').createOrderService({
                 
-                    customer: data.customer,
+                    costumer: data.costumer,
                     cashier: data.cashier,
                     orderItems: data.orderItems,
                     tax: data.tax

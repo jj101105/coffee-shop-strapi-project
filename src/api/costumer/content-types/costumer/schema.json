@@ -26,11 +26,11 @@
       "type": "string",
       "required": true
     },
-    "order": {
+    "orders": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::order.order",
-      "inversedBy": "customers"
+      "mappedBy": "customer"
     }
   }
 }

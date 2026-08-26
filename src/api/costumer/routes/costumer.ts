@@ -1,7 +1,23 @@
 /**
  * costumer router
  */
-
-import { factories } from '@strapi/strapi';
-
-export default factories.createCoreRouter('api::costumer.costumer');
+export default{
+    routes: [
+       {
+      method: 'POST',
+      path: '/costumer/createCostumer',
+      handler: 'costumer.createCostumer',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/costumer/getAllCostumer',
+      handler: 'costumer.getAllCostumer',
+      config: {
+        auth: false,
+      },
+    },
+    ]
+}

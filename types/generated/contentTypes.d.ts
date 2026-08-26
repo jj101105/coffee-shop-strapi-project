@@ -541,7 +541,7 @@ export interface ApiCostumerCostumer extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
+    orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
@@ -606,7 +606,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    customers: Schema.Attribute.Relation<'oneToMany', 'api::costumer.costumer'>;
+    customer: Schema.Attribute.Relation<'manyToOne', 'api::costumer.costumer'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
@@ -617,7 +617,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     orderAt: Schema.Attribute.DateTime;
     payment: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
-    tax: Schema.Attribute.Integer;
+    tax: Schema.Attribute.Decimal;
     total: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

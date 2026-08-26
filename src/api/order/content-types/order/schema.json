@@ -11,11 +11,11 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "customers": {
+    "customer": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "api::costumer.costumer",
-      "mappedBy": "order"
+      "inversedBy": "orders"
     },
     "cashier": {
       "type": "relation",
@@ -27,7 +27,7 @@
       "type": "decimal"
     },
     "tax": {
-      "type": "integer"
+      "type": "decimal"
     },
     "payment": {
       "type": "decimal"
