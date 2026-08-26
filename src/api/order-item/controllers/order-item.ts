@@ -20,10 +20,10 @@ export default factories.createCoreController('api::order-item.order-item', ({st
             price: data.price,
             discount: data.discount,
             discountNumber: data.discountNumber,
-            icechoice: data.iceChoice,
+            icechoice: data.iceChoice, //ice cannot push value yet
             sugarLevel: data.sugarLevel,
             subtotal: data.subtotal,
-            category: data.category
+            category: data.category //category cannot push data in field yet
            
         });
         return ctx.send({

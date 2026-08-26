@@ -26,6 +26,7 @@ export default factories.createCoreController('api::costumer.costumer',({strapi}
             throw error;
         }
     },
+    //status 500
     async getAllCostumer(ctx: any){
         try{
             const costumer= await strapi.service(APICOLLECTION.CUSTOMER).getAllService();

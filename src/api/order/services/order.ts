@@ -35,6 +35,7 @@ export default factories.createCoreService('api::order.order', ({strapi}) => ({
       const payment = total + taxAmount;
       const orderAt = new Date();
       const createOrder = await strapi.documents('api::order.order').create({
+        //costumer and order item did not display data in the field yet
         data: {
             customers: {
               connect: [data.costumer],

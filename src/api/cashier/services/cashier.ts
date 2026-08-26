@@ -35,6 +35,7 @@ export default factories.createCoreService('api::cashier.cashier', () => ({
         });
         return getCashierDetail;
     },
+    //not working yet
     async updateCashierService(documentId: string, dto:CashierDTO ){
         const updateCashier = await strapi.documents(APICOLLECTION.CASHIER).update({
             

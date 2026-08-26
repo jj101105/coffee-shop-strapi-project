@@ -15,6 +15,8 @@ export default factories.createCoreService('api::costumer.costumer', ({strapi}) 
             createCostumer
         })
     },
+
+    //this api status 500
     async getAllService(ctx: any){
         try{
             const result = await strapi.query(APICOLLECTION.CUSTOMER).findMany();
