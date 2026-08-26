@@ -1,46 +1,46 @@
 /**
- * costumer controller
+ * customer controller
  */
 
 import { factories } from '@strapi/strapi';
+import { CostumerDTO } from '../../../dtos/costumerDTO';
 import { APICOLLECTION } from '../../../utils/constant';
 import { createResponse } from '../../../utils/requestResponse';
 import { HTTPCODE } from '../../../utils/devCode';
 
-export default factories.createCoreController('api::costumer.costumer',({strapi}) => ({
-    async createCostumer(ctx:any){
-        try{
-            const data= ctx.request.body;
-            const createCostumer = await strapi.service(APICOLLECTION.CUSTOMER).createService({
-                name: data.name,
-                gender: data.gender,
-                phone: data.phone
-            })
-            return ctx.send ({
-                message: "Create costumer successfully",
-                createCostumer
-            })           
+const getCustomerDTO = (ctx: any) => {
+    const body = ctx.request.body?.data ?? ctx.request.body ?? {};
+    return new CostumerDTO({ name: body.name, gender: body.gender, phone: body.phone });
+};
 
-        }catch(error){
-            console.log("Error while fetching costumer", error);
-            throw error;
-        }
+const response = (ctx: any, message: string, data: unknown, httpCode: number = HTTPCODE.SUCCESS) =>
+    createResponse({ ctx, httpCode, devCode: httpCode, message, data });
+
+export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
+    async createCostumer(ctx: any) {
+        const customer = await strapi.service(APICOLLECTION.CUSTOMER).createCustomerService(getCustomerDTO(ctx));
+        return response(ctx, 'Create customer successfully', customer, HTTPCODE.CREATED);
     },
-    //status 500
-    async getAllCostumer(ctx: any){
-        try{
-            const costumer= await strapi.service(APICOLLECTION.CUSTOMER).getAllService();
-            return createResponse ({
-                ctx,
-                httpCode: HTTPCODE.SUCCESS,
-                devCode: HTTPCODE.SUCCESS,
-                message: "Get all costumer successfully",
-                costumer
-            })
 
-        }catch(error){
-            console.log("Error while fetching costumer", error);
-            throw error;
-        }
-    }
+    async getAllCostumer(ctx: any) {
+        const customers = await strapi.service(APICOLLECTION.CUSTOMER).getAllCustomerService();
+        return response(ctx, 'Get all customers successfully', customers);
+    },
+
+    async getCostumerDetail(ctx: any) {
+        const customer = await strapi.service(APICOLLECTION.CUSTOMER).getCustomerDetailService(ctx.params.documentId);
+        if (!customer) return ctx.notFound('Customer not found');
+        return response(ctx, 'Get customer successfully', customer);
+    },
+
+    async updateCostumer(ctx: any) {
+        const customer = await strapi.service(APICOLLECTION.CUSTOMER).updateCustomerService(ctx.params.documentId, getCustomerDTO(ctx));
+        return response(ctx, 'Update customer successfully', customer);
+    },
+
+    async deleteCostumer(ctx: any) {
+        const customer = await strapi.service(APICOLLECTION.CUSTOMER).deleteCustomerService(ctx.params.documentId);
+        if (!customer) return ctx.notFound('Customer not found');
+        return response(ctx, 'Delete customer successfully', customer);
+    },
 }));

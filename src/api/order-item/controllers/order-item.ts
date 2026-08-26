@@ -3,38 +3,49 @@
  */
 
 import { factories } from '@strapi/strapi';
-import category from '../../category/controllers/category';
+import { OrderItemDTO } from '../../../dtos/orderItemDTO';
+import { APICOLLECTION } from '../../../utils/constant';
+import { createResponse } from '../../../utils/requestResponse';
+import { HTTPCODE } from '../../../utils/devCode';
 
-export default factories.createCoreController('api::order-item.order-item', ({strapi}) =>({
-    async createOrderItem(ctx: any){
-        try{
+const getOrderItemDTO = (ctx: any) => {
+    const body = ctx.request.body?.data ?? ctx.request.body ?? {};
+    return new OrderItemDTO({
+        name: body.name,
+        qty: body.qty,
+        price: body.price,
+        discount: body.discount,
+        discountNumber: body.discountNumber,
+        iceChoice: body.iceChoice,
+        sugarLevel: body.sugarLevel,
+        categories: body.categories ?? body.category,
+    });
+};
 
-        const data=ctx.request.body;
-        if(!data){
-            ctx.badRequest("Bad request");
-        }
+export default factories.createCoreController(APICOLLECTION.ORDER_ITEM, () => ({
+    async createOrderItem(ctx: any) {
+        const item = await strapi.service(APICOLLECTION.ORDER_ITEM).createOrderItemService(getOrderItemDTO(ctx));
+        return createResponse({ ctx, httpCode: HTTPCODE.CREATED, devCode: HTTPCODE.CREATED, message: 'Create order item successfully', data: item });
+    },
 
-        const createOrderItem = await strapi.service('api::order-item.order-item').createService({
-            name: data.name,
-            qty: data.qty,
-            price: data.price,
-            discount: data.discount,
-            discountNumber: data.discountNumber,
-            icechoice: data.iceChoice, //ice cannot push value yet
-            sugarLevel: data.sugarLevel,
-            subtotal: data.subtotal,
-            category: data.category //category cannot push data in field yet
-           
-        });
-        return ctx.send({
-            message: "Create order item successfully",
-            data: createOrderItem
-        })
+    async getAllOrderItem(ctx: any) {
+        const items = await strapi.service(APICOLLECTION.ORDER_ITEM).getAllOrderItemService();
+        return createResponse({ ctx, httpCode: HTTPCODE.SUCCESS, devCode: HTTPCODE.SUCCESS, message: 'Get all order items successfully', data: items });
+    },
 
-        }catch(error){
-            console.log('Error while fetching order item');
-            throw error;
-            
-        }
-    }
+    async getOrderItemDetail(ctx: any) {
+        const item = await strapi.service(APICOLLECTION.ORDER_ITEM).getOrderItemDetailService(ctx.params.documentId);
+        if (!item) return ctx.notFound('Order item not found');
+        return createResponse({ ctx, httpCode: HTTPCODE.SUCCESS, devCode: HTTPCODE.SUCCESS, message: 'Get order item successfully', data: item });
+    },
+
+    async updateOrderItem(ctx: any) {
+        const item = await strapi.service(APICOLLECTION.ORDER_ITEM).updateOrderItemService(ctx.params.documentId, getOrderItemDTO(ctx));
+        return createResponse({ ctx, httpCode: HTTPCODE.SUCCESS, devCode: HTTPCODE.SUCCESS, message: 'Update order item successfully', data: item });
+    },
+
+    async deleteOrderItem(ctx: any) {
+        const item = await strapi.service(APICOLLECTION.ORDER_ITEM).deleteOrderItemService(ctx.params.documentId);
+        return createResponse({ ctx, httpCode: HTTPCODE.SUCCESS, devCode: HTTPCODE.SUCCESS, message: 'Delete order item successfully', data: item });
+    },
 }));

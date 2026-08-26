@@ -28,13 +28,37 @@ export default {
             auth: false
         },
     },
-    { 
-        method: 'POST',
+    {
+      method: 'POST',
         path: '/cashier/updateCasheir/:documentId',
         handler: 'cashier.updateCashier',
         config: {
             auth: false
         },
+    },
+    {
+      method: 'PUT',
+      path: '/cashier/updateCashier/:documentId',
+      handler: 'cashier.updateCashier',
+      config: {
+        auth: false
+      },
+    },
+    {
+      method: 'PATCH',
+      path: '/cashier/updateCashier/:documentId',
+      handler: 'cashier.updateCashier',
+      config: {
+        auth: false
+      },
+    },
+    {
+      method: 'POST',
+      path: '/cashier/updateCashier/:documentId',
+      handler: 'cashier.updateCashier',
+      config: {
+        auth: false
+      },
     },
     { 
         method: 'DELETE',

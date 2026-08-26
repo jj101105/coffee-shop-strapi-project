@@ -6,7 +6,6 @@ import { factories } from '@strapi/strapi';
 import jwt from 'jsonwebtoken';
 import { CashierDTO } from '../../../dtos/cashierDTO';
 import { APICOLLECTION } from '../../../utils/constant';
-import { CashierDVO } from '../../../dvos/cashierDVO';
 import { createResponse } from '../../../utils/requestResponse';
 import { HTTPCODE } from '../../../utils/devCode';
 
@@ -65,90 +64,63 @@ export default factories.createCoreController('api::cashier.cashier', () => ({
 			},
 		});
 	},
-    async getAllCashier(ctx: any){
-        try{
-            const getAllCashier = await strapi.service('api::cashier.cashier').getAllCashierService();
-            return getAllCashier;
-        }catch(error){
-            console.log("Error while fetching cashier", error);
-            throw error;
-        }
-    },
+	async getAllCashier(ctx: any){
+		const cashiers = await strapi.service(APICOLLECTION.CASHIER).getAllCashierService();
+		return createResponse({
+			ctx,
+			httpCode: HTTPCODE.SUCCESS,
+			devCode: HTTPCODE.SUCCESS,
+			message: 'Get all cashiers successfully',
+			data: cashiers,
+		});
+	},
 
-    async createCashier(ctx: any){
-        try{
-            console.log(111111111)
-            const data=ctx.request.body;
-            const createCashier= await strapi.service('api::cashier.cashier').createCashierService({
-                name: data.name,
-                phone: data.phone,
-                password: data.password,
-                workingShift: data.workingShift,
-                gender: data.gender,
-                email: data.email
-            });
-            console.log(2222222)
-            return createCashier
+	async createCashier(ctx: any){
+		const dto = new CashierDTO(ctx.request.body?.data ?? ctx.request.body ?? {});
+		const cashier = await strapi.service(APICOLLECTION.CASHIER).createCashierService(dto);
+		return createResponse({
+			ctx,
+			httpCode: HTTPCODE.CREATED,
+			devCode: HTTPCODE.CREATED,
+			message: 'Create cashier successfully',
+			data: cashier,
+		});
+	},
 
-        }catch(error){
-            console.log("Error while fetching cashier", error)
-            throw error
-        }
-    },
-    async getCashierDetail(ctx: any){
-        try {
-            const documentId =ctx.params.documentId;
-            const getCashierDetail = await strapi.service('api::cashier.cashier').getCashierDetailService(documentId);
-            return getCashierDetail;
-        }catch(error){
-            console.log("Error while fetching cashier", error);
-            throw error;
-        }
-    },
-	async updateCashier(ctx: any){
-		try {
-			const documentId= ctx.params.documentId;
-			const  dto: CashierDTO = ctx.request.body;
-			const result= await strapi.service(APICOLLECTION.CASHIER).updateCashierService(documentId, dto);
-			ctx.body= result;
-			const dvo: CashierDVO ={
-				documentId : result.documentId,
-				name: result.name,
-				phone: result.phone,
-				workingShift: result.workingShift,
-				gender: result.gender,
-				email:result.email,
-				order: result.order,
-			}
-			ctx.body={
-				data:dvo
-			}
-			return createResponse({
-				ctx,
-				httpCode: HTTPCODE.CREATED,
-				devCode: HTTPCODE.CREATED,
-				message: "Update casher successfully",
-				data:result
-			})
-			
-		}catch(error){
-			throw Error("Error while festching cashier");
+	async getCashierDetail(ctx: any){
+		const cashier = await strapi.service(APICOLLECTION.CASHIER).getCashierDetailService(ctx.params.documentId);
+		if (!cashier) {
+			return ctx.notFound('Cashier not found');
 		}
+
+		return createResponse({
+			ctx,
+			httpCode: HTTPCODE.SUCCESS,
+			devCode: HTTPCODE.SUCCESS,
+			message: 'Get cashier successfully',
+			data: cashier,
+		});
+	},
+	async updateCashier(ctx: any){
+		const dto = new CashierDTO(ctx.request.body?.data ?? ctx.request.body ?? {});
+		const cashier = await strapi.service(APICOLLECTION.CASHIER).updateCashierService(ctx.params.documentId, dto);
+		return createResponse({
+			ctx,
+			httpCode: HTTPCODE.SUCCESS,
+			devCode: HTTPCODE.SUCCESS,
+			message: 'Update cashier successfully',
+			data: cashier,
+		});
 	},
 	async deleteCashier(ctx: any){
-		try{
-			const documentId= ctx.params.documentId;
-			const deleteCashier= await strapi.service(APICOLLECTION.CASHIER).deleteService(documentId);
-			return createResponse({
-				ctx,
-				httpCode: HTTPCODE.SUCCESS,
-				devCode: HTTPCODE.SUCCESS,
-				message: "Delete cashier success",
-				data: deleteCashier
-			})
-		}catch(error){
-			throw Error ("Error while fetching cashier")
-		}
+		const cashier = await strapi.service(APICOLLECTION.CASHIER).deleteCashierService(ctx.params.documentId);
+		return createResponse({
+			ctx,
+			httpCode: HTTPCODE.SUCCESS,
+			devCode: HTTPCODE.SUCCESS,
+			message: 'Delete cashier successfully',
+			data: cashier,
+		});
 	}
     
 }));
