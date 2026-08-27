@@ -10,48 +10,37 @@ export default {
             handler: 'category.createCategory',
             config: { auth: false },
         },
-        {
-            method: 'GET',
-            path: '/get/categoryList',
-            handler: 'category.categoryList',
-            config: { auth: false },
-        },
-        {
-            method: 'GET',
-            path: '/category/getAllCategory',
-            handler: 'category.getAllCategory',
-            config: { auth: false },
-        },
-        {
-            method: 'GET',
-            path: '/category/getCategoryDetail/:documentId',
-            handler: 'category.getCategoryDetail',
-            config: { auth: false },
-        },
-        {
-            method: 'PUT',
-            path: '/category/updateCategory/:documentId',
-            handler: 'category.updateCategory',
-            config: { auth: false },
-        },
-        {
-            method: 'PATCH',
-            path: '/category/updateCategory/:documentId',
-            handler: 'category.updateCategory',
-            config: { auth: false },
-        },
-        {
-            method: 'POST',
-            path: '/category/updateCategory/:documentId',
-            handler: 'category.updateCategory',
-            config: { auth: false },
-        },
-        {
-            method: 'DELETE',
-            path: '/category/deleteCategory/:documentId',
-            handler: 'category.deleteCategory',
-            config: { auth: false },
-        },
+        // {
+        //     method: 'GET',
+        //     path: '/get/categoryList',
+        //     handler: 'category.categoryList',
+        //     config: { auth: false },
+        // },
+        // {
+        //     method: 'GET',
+        //     path: '/category/getAllCategory',
+        //     handler: 'category.getAllCategory',
+        //     config: { auth: false },
+        // },
+        // {
+        //     method: 'GET',
+        //     path: '/category/getCategoryDetail/:documentId',
+        //     handler: 'category.getCategoryDetail',
+        //     config: { auth: false },
+        // },
+      
+        // {
+        //     method: 'POST',
+        //     path: '/category/updateCategory/:documentId',
+        //     handler: 'category.updateCategory',
+        //     config: { auth: false },
+        // },
+        // {
+        //     method: 'DELETE',
+        //     path: '/category/deleteCategory/:documentId',
+        //     handler: 'category.deleteCategory',
+        //     config: { auth: false },
+        // },
     ],
 };
 

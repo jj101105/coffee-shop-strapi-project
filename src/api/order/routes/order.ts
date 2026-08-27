@@ -36,14 +36,7 @@ export default {
                 auth: false,
             },
         },
-        {
-            method: 'PATCH',
-            path: '/order/updateOrder/:documentId',
-            handler: 'order.updateOrder',
-            config: {
-                auth: false,
-            },
-        },
+        
         {
             method: 'DELETE',
             path: '/order/deleteOrder/:documentId',
