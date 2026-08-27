@@ -3,85 +3,68 @@
  */
 
 import { factories } from '@strapi/strapi';
+import { CategoryDTO } from '../../../dtos/categoryDTO';
+import { toCategoryDVO } from '../../../dvos/categoryDVO';
 import { APICOLLECTION } from '../../../utils/constant';
-import type { Category, CategoryInput } from '../../../types/category';
-import { toCategoryDTO } from '../../../dtos/categoryDTO';
-// import { CategoryDVO } from '../../../dvos/categoryDVO';
-// const populate = { order_items: true };
-
-// const toCategoryDVO = (category: Partial<Category>): CategoryDVO => new CategoryDVO({
-// 	id: category.id,
-// 	documentId: category.documentId,
-// 	name: category.name,
-// 	order_items: category.order_items as CategoryDVO['order_items'],
-// 	createdAt: category.createdAt,
-// 	updatedAt: category.updatedAt,
-// 	publishedAt: category.publishedAt,
-// });
-
-// const categoryData = (dto: CategoryDTO | CategoryInput) => {
-// 	if (!dto.name?.trim()) throw new Error('name is required');
-
-// 	return {
-// 		name: dto.name.trim(),
-// 		...(dto.order_items === undefined
-// 			? {}
-// 			: { order_items: { set: dto.order_items.map(String) } }),
-// 	};
-// };
+import { CATEGORY_POPULATE, categoryData } from '../../../utils/categoryHelper';
+import type { Category } from '../../../types/category';
 
 export default factories.createCoreService(APICOLLECTION.CATEGORY, () => ({
-	// async createCategoryService(dto: CategoryDTO | CategoryInput) {
-	// 	const category = await strapi.documents(APICOLLECTION.CATEGORY).create({
-	// 		data: categoryData(dto),
-	// 		populate,
-	// 		status: 'published',
-	// 	});
-	// 	return toCategoryDVO(category as Partial<Category>);
-	// },
-	async createCategoryService(dto: CategoryInput){
-		const category= await strapi.documents(APICOLLECTION.CATEGORY).create({
-			 data: {
-                name: dto.name,
-				order_items: dto.order_items
-            },
-			
-		})
-	 }
 
-	// async getAllCategoryService() {
-	// 	const categories = await strapi.documents(APICOLLECTION.CATEGORY).findMany({ populate });
-	// 	return categories.map((category) => toCategoryDVO(category as Partial<Category>));
-	// },
+	
+  async createCategoryService(dto: CategoryDTO) {
+    const category = await strapi.documents(APICOLLECTION.CATEGORY).create({
+      data: categoryData(dto),
+      populate: CATEGORY_POPULATE,
+      status: 'published',
+    });
 
-	// async getCategoryDetailService(documentId: string) {
-	// 	const category = await strapi.documents(APICOLLECTION.CATEGORY).findOne({ documentId, populate });
-	// 	return category ? toCategoryDVO(category as Partial<Category>) : null;
-	// },
+    return toCategoryDVO(category as Partial<Category>);
+  },
 
-	// async updateCategoryService(documentId: string, dto: CategoryDTO) {
-	// 	const currentCategory = await strapi.documents(APICOLLECTION.CATEGORY).findOne({ documentId });
-	// 	if (!currentCategory) throw new Error(`Category with documentId ${documentId} was not found`);
+  async getAllCategoryService() {
+    const categories = await strapi.documents(APICOLLECTION.CATEGORY).findMany({ populate: CATEGORY_POPULATE });
+    return categories.map((category) => toCategoryDVO(category as Partial<Category>));
+  },
 
-	// 	const current = currentCategory as Partial<Category>;
-	// 	const data: Record<string, unknown> = {
-	// 		name: dto.name?.trim() ?? current.name,
-	// 	};
-	// 	if (!String(data.name).trim()) throw new Error('name is required');
-	// 	if (dto.order_items !== undefined) {
-	// 		data.order_items = { set: dto.order_items.map(String) };
-	// 	}
+  async getCategoryDetailService(documentId: string) {
+    const category = await strapi.documents(APICOLLECTION.CATEGORY).findOne({
+      documentId,
+      populate: CATEGORY_POPULATE,
+    });
+    return category ? toCategoryDVO(category as Partial<Category>) : null;
+  },
 
-	// 	const category = await strapi.documents(APICOLLECTION.CATEGORY).update({
-	// 		documentId,
-	// 		data,
-	// 		populate,
-	// 	});
-	// 	return toCategoryDVO(category as Partial<Category>);
-	// },
+  async updateCategoryService(documentId: string, dto: CategoryDTO) {
+    const currentCategory = await strapi.documents(APICOLLECTION.CATEGORY).findOne({ documentId });
+    if (!currentCategory) {
+      throw new Error(`Category with documentId ${documentId} was not found`);
+    }
 
-	// async deleteCategoryService(documentId: string) {
-	// 	const category = await strapi.documents(APICOLLECTION.CATEGORY).delete({ documentId });
-	// 	return category ? toCategoryDVO(category as Partial<Category>) : null;
-	// },
+    const current = currentCategory as Partial<Category>;
+    const data: Record<string, unknown> = {
+      name: dto.name?.trim() ?? current.name,
+    };
+
+    if (!String(data.name).trim()) {
+      throw new Error('name is required');
+    }
+
+    if (dto.order_items !== undefined) {
+      data.order_items = { set: dto.order_items.map(String) };
+    }
+
+    const category = await strapi.documents(APICOLLECTION.CATEGORY).update({
+      documentId,
+      data,
+      populate: CATEGORY_POPULATE,
+    });
+
+    return toCategoryDVO(category as Partial<Category>);
+  },
+
+  async deleteCategoryService(documentId: string) {
+    const category = await strapi.documents(APICOLLECTION.CATEGORY).delete({ documentId });
+    return category ? toCategoryDVO(category as Partial<Category>) : null;
+  },
 }));

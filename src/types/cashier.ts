@@ -17,13 +17,4 @@ export interface Cashier {
   publishedAt?: string | null;
 }
 
-export interface CreateCashierInput {
-  name: string;
-  phone: string;
-  password: string;
-  workingShift: WorkingShift;
-  gender: Gender;
-  email: string;
-}
-
 export interface CashierView extends Cashier {}

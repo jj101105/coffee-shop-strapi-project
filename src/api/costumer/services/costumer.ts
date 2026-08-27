@@ -6,9 +6,8 @@ import { factories } from '@strapi/strapi';
 import { CostumerDTO } from '../../../dtos/costumerDTO';
 import { CostumerDVO } from '../../../dvos/costumerDVO';
 import { APICOLLECTION } from '../../../utils/constant';
+import { CUSTOMER_POPULATE, customerData } from '../../../utils/costumerHelper';
 import type { Costumer, CreateCostumerInput } from '../../../types/costumer';
-
-const populate = { orders: true };
 
 const toCostumerDVO = (customer: Partial<Costumer>): CostumerDVO => new CostumerDVO({
     id: customer.id,
@@ -22,35 +21,23 @@ const toCostumerDVO = (customer: Partial<Costumer>): CostumerDVO => new Costumer
     publishedAt: customer.publishedAt,
 });
 
-const requiredCustomerData = (dto: CostumerDTO | CreateCostumerInput) => {
-    if (!dto.name?.trim() || !dto.phone?.trim()) {
-        throw new Error('name and phone are required');
-    }
-
-    return {
-        name: dto.name.trim(),
-        phone: dto.phone.trim(),
-        ...(dto.gender !== undefined ? { gender: dto.gender } : {}),
-    };
-};
-
 export default factories.createCoreService(APICOLLECTION.CUSTOMER, () => ({
     async createCustomerService(dto: CostumerDTO | CreateCostumerInput) {
         const customer = await strapi.documents(APICOLLECTION.CUSTOMER).create({
-            data: requiredCustomerData(dto),
-            populate,
+            data: customerData(dto),
+            populate: CUSTOMER_POPULATE,
             status: 'published',
         });
         return toCostumerDVO(customer as Partial<Costumer>);
     },
 
     async getAllCustomerService() {
-        const customers = await strapi.documents(APICOLLECTION.CUSTOMER).findMany({ populate });
+        const customers = await strapi.documents(APICOLLECTION.CUSTOMER).findMany({ populate: CUSTOMER_POPULATE });
         return customers.map((customer) => toCostumerDVO(customer as Partial<Costumer>));
     },
 
     async getCustomerDetailService(documentId: string) {
-        const customer = await strapi.documents(APICOLLECTION.CUSTOMER).findOne({ documentId, populate });
+        const customer = await strapi.documents(APICOLLECTION.CUSTOMER).findOne({ documentId, populate: CUSTOMER_POPULATE });
         return customer ? toCostumerDVO(customer as Partial<Costumer>) : null;
     },
 
@@ -71,7 +58,7 @@ export default factories.createCoreService(APICOLLECTION.CUSTOMER, () => ({
         const customer = await strapi.documents(APICOLLECTION.CUSTOMER).update({
             documentId,
             data,
-            populate,
+            populate: CUSTOMER_POPULATE,
         });
         return toCostumerDVO(customer as Partial<Costumer>);
     },

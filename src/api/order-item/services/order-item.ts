@@ -7,59 +7,52 @@ import { OrderItemDTO } from '../../../dtos/orderItemDTO';
 import { OrderItemDVO } from '../../../dvos/orderItemDVO';
 import { APICOLLECTION } from '../../../utils/constant';
 import type { OrderItem, OrderItemInput } from '../../../types/orderItem';
+import { populate, toOrderItemDVO } from '../../../utils/order-itemsHelpers';
 
-const populate = { categories: true };
 
-const toOrderItemDVO = (item: Partial<OrderItem>): OrderItemDVO => new OrderItemDVO({
-    id: item.id,
-    documentId: item.documentId,
-    name: item.name,
-    qty: item.qty,
-    price: item.price,
-    discount: item.discount,
-    discountNumber: item.discountNumber,
-    iceChoice: item.iceChoice,
-    sugarLevel: item.sugarLevel,
-    subTotal: item.subTotal,
-    categories: item.categories as OrderItemDVO['categories'],
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-    publishedAt: item.publishedAt,
-});
+const calculateItem = (dto: Partial<OrderItemDTO | OrderItemInput>) => {
+    const qty = Number(dto.qty ?? 0);
+    const price = Number(dto.price ?? 0);
+    const discount = Boolean(dto.discount);
+    const discountNumber = Number(dto.discountNumber ?? 0);
+    const subTotal = qty * price;
 
-const calculateItem = (dto: OrderItemDTO | OrderItemInput) => {
-    const price = Number(dto.price);
-    const qty = Number(dto.qty);
-    const discount = dto.discount === true;
-    const discountNumber = discount ? Number(dto.discountNumber ?? 0) : 0;
-
-    if (!Number.isFinite(price) || price < 0) throw new Error('Price cannot be negative');
-    if (!Number.isInteger(qty) || qty <= 0) throw new Error('Quantity must be greater than 0');
-    if (!Number.isFinite(discountNumber) || discountNumber < 0 || discountNumber > 100) {
-        throw new Error('Discount must be between 0 and 100 percent');
+    if (!dto.name?.trim()) {
+        throw new Error('name is required');
+    }
+    if (!Number.isFinite(qty) || qty <= 0) {
+        throw new Error('qty must be greater than 0');
+    }
+    if (!Number.isFinite(price) || price < 0) {
+        throw new Error('price must be greater than or equal to 0');
     }
 
-    const grossTotal = qty * price;
+    const computedTotal = discount ? Math.max(subTotal - discountNumber, 0) : subTotal;
+
     return {
+        name: dto.name.trim(),
         qty,
         price,
         discount,
-        discountNumber,
-        subTotal: grossTotal - (grossTotal * discountNumber / 100),
+        discountNumber: discount ? discountNumber : 0,
+        subTotal: computedTotal,
     };
 };
 
-const relationData = (categories?: Array<string | number>) =>
-    categories === undefined ? {} : { categories: { set: categories.map(String) } };
+const relationData = (categories?: Array<string | number>) => {
+    if (!categories || categories.length === 0) return {};
+    return {
+        categories: { set: categories.map(String) },
+    };
+};
 
 export default factories.createCoreService(APICOLLECTION.ORDER_ITEM, () => ({
     async createOrderItemService(dto: OrderItemDTO | OrderItemInput) {
         const item = await strapi.documents(APICOLLECTION.ORDER_ITEM).create({
             data: {
-                name: dto.name,
-                iceChoice: dto.iceChoice,
-                sugarLevel: dto.sugarLevel,
                 ...calculateItem(dto),
+                ...(dto.iceChoice !== undefined ? { iceChoice: dto.iceChoice } : {}),
+                ...(dto.sugarLevel !== undefined ? { sugarLevel: dto.sugarLevel } : {}),
                 ...relationData(dto.categories),
             },
             populate,
@@ -95,7 +88,6 @@ export default factories.createCoreService(APICOLLECTION.ORDER_ITEM, () => ({
         });
         const data: Record<string, unknown> = {
             ...itemData,
-            ...(dto.name !== undefined ? { name: dto.name } : {}),
             ...(dto.iceChoice !== undefined ? { iceChoice: dto.iceChoice } : {}),
             ...(dto.sugarLevel !== undefined ? { sugarLevel: dto.sugarLevel } : {}),
             ...relationData(dto.categories),
