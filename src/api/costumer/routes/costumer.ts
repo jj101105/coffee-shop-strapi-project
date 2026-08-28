@@ -28,18 +28,6 @@ export default {
           config: { auth: false },
         },
         {
-          method: 'PATCH',
-          path: '/costumer/updateCostumer/:documentId',
-          handler: 'costumer.updateCostumer',
-          config: { auth: false },
-        },
-        {
-          method: 'POST',
-          path: '/costumer/updateCostumer/:documentId',
-          handler: 'costumer.updateCostumer',
-          config: { auth: false },
-        },
-        {
           method: 'DELETE',
           path: '/costumer/deleteCostumer/:documentId',
           handler: 'costumer.deleteCostumer',

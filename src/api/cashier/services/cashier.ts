@@ -10,6 +10,7 @@ import type { Cashier } from '../../../types/cashier';
 
 
 export default factories.createCoreService('api::cashier.cashier', () => ({
+    
     async createCashierService(data: CashierDTO){
         const requiredFields = [data.name, data.phone, data.password, data.workingShift, data.gender, data.email];
         if (requiredFields.some((value) => value === undefined || value === null || value === '')) {

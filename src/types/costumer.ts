@@ -1,12 +1,12 @@
 import type { Order } from './order';
 
 export interface Costumer {
-  id: string | number;
+  id: string | number | undefined;
   documentId?: string;
-  name: string;
+  name: string | undefined;
   gender?: 'MALE' | 'FEMALE';
-  phone: string;
-  orders?: Array<Order | string | number>;
+  phone: string | undefined;
+  orders?: Array<Order | string | number |Record<string, undefined> >[] | undefined;
   createdAt?: string;
   updatedAt?: string;
   publishedAt?: string | null;

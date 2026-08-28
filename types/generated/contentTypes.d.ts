@@ -625,6 +625,43 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiStockStock extends Struct.CollectionTypeSchema {
+  collectionName: 'stocks';
+  info: {
+    displayName: 'Stock';
+    pluralName: 'stocks';
+    singularName: 'stock';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::stock.stock'> &
+      Schema.Attribute.Private;
+    minQuantity: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 10;
+        },
+        number
+      >;
+    productName: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Decimal;
+    stockStatus: Schema.Attribute.Enumeration<
+      ['IN STOCK', 'LOW STOCK', 'OUT OF STOCK']
+    >;
+    unit: Schema.Attribute.Enumeration<['KG', 'PACK', 'LITER']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1141,6 +1178,7 @@ declare module '@strapi/strapi' {
       'api::costumer.costumer': ApiCostumerCostumer;
       'api::order-item.order-item': ApiOrderItemOrderItem;
       'api::order.order': ApiOrderOrder;
+      'api::stock.stock': ApiStockStock;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

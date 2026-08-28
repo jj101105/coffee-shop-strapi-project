@@ -1,7 +1,7 @@
 import { Order, OrderView } from '../types/order';
 
 export class OrderDVO {
-  id?: string | number;
+  id?: string | number | Record<string, unknown>;
   documentId?: string;
   customer?: string | number | Record<string, unknown>;
   cashier?: string | number | Record<string, unknown>;

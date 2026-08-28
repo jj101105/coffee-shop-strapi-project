@@ -8,23 +8,6 @@ import { getCustomerDTO } from '../../../utils/costumerHelper';
 import { createResponse } from '../../../utils/requestResponse';
 import { HTTPCODE } from '../../../utils/devCode';
 
-
-
-const handleError = (ctx: any, error: unknown) => {
-    const message = error instanceof Error ? error.message : 'Something went wrong';
-    const isNotFound = /not found/i.test(message);
-    const isValidationError = /required|invalid|must be|were not found/i.test(message);
-    const httpCode = isNotFound ? HTTPCODE.NOT_FOUND : isValidationError ? HTTPCODE.BAD_REQUEST : HTTPCODE.INTERNAL_SERVER_ERROR;
-
-    return createResponse({
-        ctx,
-        httpCode,
-        devCode: httpCode,
-        message,
-        data: null,
-    });
-};
-
 export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
     async createCostumer(ctx: any) {
         try {
@@ -37,7 +20,7 @@ export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
                 data: customer,
             });
         } catch (error) {
-            return handleError(ctx, error);
+           throw Error("Error while create costumer" +error)
         }
     },
 
@@ -52,7 +35,7 @@ export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
                 data: customers,
             });
         } catch (error) {
-            return handleError(ctx, error);
+            throw Error("Error while get costumer" +error)
         }
     },
 
@@ -68,7 +51,7 @@ export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
                 data: customer,
             });
         } catch (error) {
-            return handleError(ctx, error);
+             throw Error("Error while get costumer detail" +error)
         }
     },
 
@@ -83,7 +66,7 @@ export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
                 data: customer,
             });
         } catch (error) {
-            return handleError(ctx, error);
+             throw Error("Error while update costumer" +error)
         }
     },
 
@@ -99,7 +82,7 @@ export default factories.createCoreController(APICOLLECTION.CUSTOMER, () => ({
                 data: customer,
             });
         } catch (error) {
-            return handleError(ctx, error);
+             throw Error("Error while delete costumer" +error)
         }
     },
 }));

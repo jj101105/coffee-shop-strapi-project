@@ -4,24 +4,13 @@
 
 import { factories } from '@strapi/strapi';
 import { CostumerDTO } from '../../../dtos/costumerDTO';
-import { CostumerDVO } from '../../../dvos/costumerDVO';
+import { CostumerDVO, toCostumerDVO } from '../../../dvos/costumerDVO';
 import { APICOLLECTION } from '../../../utils/constant';
 import { CUSTOMER_POPULATE, customerData } from '../../../utils/costumerHelper';
 import type { Costumer, CreateCostumerInput } from '../../../types/costumer';
 
-const toCostumerDVO = (customer: Partial<Costumer>): CostumerDVO => new CostumerDVO({
-    id: customer.id,
-    documentId: customer.documentId,
-    name: customer.name,
-    gender: customer.gender,
-    phone: customer.phone,
-    orders: customer.orders as CostumerDVO['orders'],
-    createdAt: customer.createdAt,
-    updatedAt: customer.updatedAt,
-    publishedAt: customer.publishedAt,
-});
-
 export default factories.createCoreService(APICOLLECTION.CUSTOMER, () => ({
+
     async createCustomerService(dto: CostumerDTO | CreateCostumerInput) {
         const customer = await strapi.documents(APICOLLECTION.CUSTOMER).create({
             data: customerData(dto),

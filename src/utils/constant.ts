@@ -3,5 +3,6 @@ export const APICOLLECTION = {
     CUSTOMER: 'api::costumer.costumer',
     ORDER: 'api::order.order',
     ORDER_ITEM: 'api::order-item.order-item',
-    CATEGORY: 'api::category.category'
+    CATEGORY: 'api::category.category',
+    STOCK: 'api::stock.stock'
 } as const;
