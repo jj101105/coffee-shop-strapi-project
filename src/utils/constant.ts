@@ -4,5 +4,6 @@ export const APICOLLECTION = {
     ORDER: 'api::order.order',
     ORDER_ITEM: 'api::order-item.order-item',
     CATEGORY: 'api::category.category',
-    STOCK: 'api::stock.stock'
+    STOCK: 'api::stock.stock',
+    PAYMENT: 'api::payment.payment'
 } as const;

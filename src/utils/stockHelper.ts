@@ -10,6 +10,7 @@ export const getStockDTO = (ctx: any) =>{
     unit:body.unit,
     minQuantity:body.minQuantity,
     stockStatus:body.stockStatus
+    
     });
 };
 export const toStockDVO = (item: Partial<Stock>): StockDVO => new StockDVO({
@@ -19,5 +20,5 @@ export const toStockDVO = (item: Partial<Stock>): StockDVO => new StockDVO({
     unit:item.unit,
     minQuantity: item.minQuantity,
     stockStatus: item.stockStatus,
-
+    
 })

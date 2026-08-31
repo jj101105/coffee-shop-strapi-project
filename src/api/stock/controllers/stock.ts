@@ -8,6 +8,7 @@ import { getStockDTO } from '../../../utils/stockHelper';
 import { createResponse } from '../../../utils/requestResponse';
 import { HTTPCODE } from '../../../utils/devCode';
 import { error } from 'console';
+import { SearchByProdName } from '../../../dtos/stockDTO';
 
 export default factories.createCoreController('api::stock.stock', ({ strapi }) => ({
 
@@ -85,6 +86,40 @@ export default factories.createCoreController('api::stock.stock', ({ strapi }) =
             })
         }catch(error){
             throw Error ("Error while delete stock"+error);
+        }
+    },
+    async searchStock(ctx:any){
+        try{
+           const dto: SearchByProdName= {
+            productname: ctx.params.productname
+           };
+            const search= await strapi.service(APICOLLECTION.STOCK).searchService(dto);
+            ctx.body = {
+                httpCode: HTTPCODE.SUCCESS,
+                devCode: HTTPCODE.SUCCESS,
+                message: "Search found",
+                data: search
+            }
+        }catch(error){
+            console.log("Error while search product in strock"+error);
+            throw error;
+        }
+    },
+    async lowStock(ctx:any){
+        try{
+            const result= await strapi.service(APICOLLECTION.STOCK).lowStockService();
+            
+           ctx.body= {
+            httpCode: HTTPCODE.SUCCESS,
+            devCode: HTTPCODE.SUCCESS,
+            message: "Low stock loaded",
+            data: result
+           }
+           
+
+        }catch(error){
+            console.log("Error while fetching stock",error);
+            throw error;
         }
     }
 

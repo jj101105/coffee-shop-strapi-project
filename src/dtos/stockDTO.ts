@@ -9,3 +9,6 @@ export class StockDTO {
     Object.assign(this, data);
   }
 }
+export interface SearchByProdName{
+  productname:string;
+}

@@ -41,6 +41,23 @@ import { METHODS } from "http";
             config:{
                 auth: false
             }
+        },
+        {
+            method: 'GET',
+            path: "/stock/search-product-stock/:productname",
+            handler: "stock.searchStock",
+            config:{
+                auth: false
+            }
+        },
+        //low stock notification api 
+        {
+            method: 'GET',
+            path: "/stock/low-stock",
+            handler: "stock.lowStock",
+            config:{
+                auth: false
+            }
         }
     ]
  }
